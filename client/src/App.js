@@ -13,7 +13,6 @@ function App() {
 
   useEffect(() => {
     fetchCalls();
-    // Refresh calls every 5 seconds
     const interval = setInterval(fetchCalls, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -22,6 +21,7 @@ function App() {
     try {
       const response = await axios.get(`${API_BASE_URL}/calls`);
       setCalls(response.data.calls || []);
+      console.log('Fetched calls:', response.data); // ✅ use response
     } catch (err) {
       console.error('Error fetching calls:', err);
     }
@@ -41,7 +41,9 @@ function App() {
       const response = await axios.post(`${API_BASE_URL}/calls/initiate`, {
         phone_number: phoneNumber
       });
-      
+
+      console.log('Initiate call response:', response.data); // ✅ use response
+
       setPhoneNumber('');
       fetchCalls();
       alert('Call initiated successfully!');
@@ -57,6 +59,7 @@ function App() {
     try {
       const response = await axios.get(`${API_BASE_URL}/calls/${callId}`);
       setSelectedCall(response.data.call);
+      console.log('Call details response:', response.data); // ✅ use response
     } catch (err) {
       console.error('Error fetching call details:', err);
       setError('Failed to load call details');
@@ -69,7 +72,8 @@ function App() {
     }
 
     try {
-      await axios.delete(`${API_BASE_URL}/calls/${callId}`);
+      const response = await axios.delete(`${API_BASE_URL}/calls/${callId}`);
+      console.log('Delete call response:', response.data); // ✅ use response
       fetchCalls();
       if (selectedCall && selectedCall.id === callId) {
         setSelectedCall(null);
@@ -247,4 +251,3 @@ function App() {
 }
 
 export default App;
-
